@@ -1,0 +1,8 @@
+# Parte 1A-2 – Início da função safe_commit
+safe_commit() {
+  BRANCH_NAME="$1"
+  COMMIT_TITLE="$2"
+  COMMIT_DESC="$3"
+
+  git checkout main || { echo "Erro: não foi possível mudar para main"; return 1; }
+  git pull origin main || echo "Aviso: falha ao atualizar main"
