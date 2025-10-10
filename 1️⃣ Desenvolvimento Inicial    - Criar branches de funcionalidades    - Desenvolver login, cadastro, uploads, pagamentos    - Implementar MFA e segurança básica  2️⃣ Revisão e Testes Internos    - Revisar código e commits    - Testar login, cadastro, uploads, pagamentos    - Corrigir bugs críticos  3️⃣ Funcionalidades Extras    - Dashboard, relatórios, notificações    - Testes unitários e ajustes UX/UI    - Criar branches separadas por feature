@@ -1,0 +1,14 @@
+1️⃣ Desenvolvimento Inicial
+   - Criar branches de funcionalidades
+   - Desenvolver login, cadastro, uploads, pagamentos
+   - Implementar MFA e segurança básica
+
+2️⃣ Revisão e Testes Internos
+   - Revisar código e commits
+   - Testar login, cadastro, uploads, pagamentos
+   - Corrigir bugs críticos
+
+3️⃣ Funcionalidades Extras
+   - Dashboard, relatórios, notificações
+   - Testes unitários e ajustes UX/UI
+   - Criar branches separadas por feature
