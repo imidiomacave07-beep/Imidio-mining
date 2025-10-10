@@ -1,0 +1,19 @@
+✅ Semana 1 – Revisão geral
+[ ] Testar login, cadastro e uploads
+[ ] Verificar MFA
+[ ] Corrigir bugs críticos
+
+✅ Semana 2 – Teste de pagamentos
+[ ] Testar integração com banco
+[ ] Testar pagamentos em criptomoedas (sandbox)
+[ ] Simular fluxos completos de transação
+
+✅ Semana 3 – Funcionalidades extras
+[ ] Implementar recursos pendentes (dashboard, relatórios, notificações)
+[ ] Criar branches separadas para cada feature
+[ ] Testes unitários das novas funções
+
+✅ Semana 4 – Preparação para lançamento
+[ ] Limpar branches antigas
+[ ] Atualizar documentação/tutorial
+[ ] Configurar links públicos ou hospedagem
