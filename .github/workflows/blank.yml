@@ -1,0 +1,283 @@
+#// server.js - Mining Imidio (com placeholders para pagamentos)
+const express = require('express');
+const path = require('path');
+const bcrypt = require('bcryptjs');
+const multer = require('multer');
+const shortid = require('shortid');
+const cookieParser = require('cookie-parser');
+const { Low, JSONFile } = require('lowdb');
+const fetch = require('node-fetch'); // instalar: npm i node-fetch@2
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// lowdb setup
+const file = path.join(__dirname, 'db.json');
+const adapter = new JSONFile(file);
+const db = new Low(adapter);
+
+async function initDB(){
+  await db.read();
+  db.data = db.data || { users: [], plans: [], purchases: [], admin: { username: 'admin', passwordHash: '' } };
+  // ensure plans exist if empty
+  if(!db.data.plans || db.data.plans.length===0){
+    db.data.plans = [
+      {"id":"bronze","name":"Plano Bronze","usd":50,"daily_percent":2,"duration_days":30},
+      {"id":"prata","name":"Plano Prata","usd":100,"daily_percent":3,"duration_days":30},
+      {"id":"ouro","name":"Plano Ouro","usd":200,"daily_percent":4,"duration_days":30},
+      {"id":"diamante","name":"Plano Diamante","usd":500,"daily_percent":5,"duration_days":30}
+    ];
+  }
+  await db.write();
+}
+initDB();
+
+// middleware
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json({limit: '10mb'}));
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// multer for uploads
+const upload = multer({ dest: path.join(__dirname, 'uploads/') });
+
+// Helpers
+function requireAuth(req, res, next){
+  const token = req.cookies.auth;
+  if(!token) return res.status(401).json({ error: 'not-auth' });
+  db.read().then(()=> {
+    const user = db.data.users.find(u => u.token === token);
+    if(!user) return res.status(401).json({ error: 'not-auth' });
+    req.user = user;
+    next();
+  });
+}
+
+async function applyPayment(purchaseId, provider, providerRef){
+  await db.read();
+  const p = db.data.purchases.find(x => x.id === purchaseId);
+  if(!p) return false;
+  if(p.status === 'active') return true;
+  p.status = 'active';
+  p.proof = p.proof || null;
+  p.provider = provider;
+  p.providerRef = providerRef || null;
+  p.boughtAt = new Date().toISOString();
+  await db.write();
+  return true;
+}
+
+// Routes (existing)
+app.get('/api/plans', async (req,res) => {
+  await db.read();
+  res.json(db.data.plans);
+});
+
+app.post('/api/register', async (req,res) => {
+  const { name, email, password, phone } = req.body;
+  if(!email || !password) return res.status(400).json({error:'email/password required'});
+  await db.read();
+  if(db.data.users.find(u => u.email === email)) return res.status(400).json({error:'Email já usado'});
+  const salt = bcrypt.genSaltSync(10);
+  const hash = bcrypt.hashSync(password, salt);
+  const token = shortid.generate();
+  const user = { id: shortid.generate(), name, email, phone, passwordHash: hash, token, balanceUSD:0 };
+  db.data.users.push(user);
+  await db.write();
+  res.json({ ok:true, token });
+});
+
+app.post('/api/login', async (req,res) => {
+  const { email, password } = req.body;
+  await db.read();
+  const user = db.data.users.find(u => u.email === email);
+  if(!user) return res.status(400).json({error:'Credenciais inválidas'});
+  const match = bcrypt.compareSync(password, user.passwordHash);
+  if(!match) return res.status(400).json({error:'Credenciais inválidas'});
+  res.cookie('auth', user.token, { httpOnly: true });
+  res.json({ ok:true });
+});
+
+// Buying plan (create purchase record)
+app.post('/api/buy', requireAuth, async (req,res) => {
+  const { planId, method } = req.body; // method: 'mpesa'|'paypal'|'binance'|'emola'|'manual'
+  await db.read();
+  const plan = db.data.plans.find(p => p.id === planId);
+  if(!plan) return res.status(400).json({error:'Plano inválido'});
+  const purchase = {
+    id: shortid.generate(),
+    userId: req.user.id,
+    planId: plan.id,
+    planSnapshot: plan,
+    boughtAt: null,
+    status: 'pending',
+    proof: null,
+    method: method || 'manual',
+    providerRef: null
+  };
+  db.data.purchases.push(purchase);
+  await db.write();
+
+  // If manual, return purchaseId so user uploads comprovante
+  if(!method || method === 'manual') return res.json({ ok:true, purchaseId: purchase.id });
+
+  // For online methods, build a payment init response (client will redirect)
+  // We'll return an object with { gotoUrl, reference } or instruction for client
+  // Implement method-specific flows below
+  if(method === 'mpesa'){
+    // Placeholder: in production call M-Pesa API to create STK push or payment request
+    // We'll return a fake response instructing frontend how to open payment
+    return res.json({ ok:true, note: 'M-Pesa STK push must be triggered server-side with your M-Pesa credentials. Use purchaseId to link payment.' , purchaseId: purchase.id });
+  } else if(method === 'paypal'){
+    // Create PayPal order (placeholder) - use PayPal SDK / REST API here
+    // Example: return approval link to frontend
+    return res.json({ ok:true, note: 'Criar ordem PayPal no servidor usando CLIENT_ID & SECRET. Depois redirecionar user para approval_url.', purchaseId: purchase.id });
+  } else if(method === 'binance'){
+    // Binance Pay or onramp: usually use Binance API or third-party onramp
+    return res.json({ ok:true, note: 'Gerar invoice/binance pay session no servidor (usando chaves Binance).', purchaseId: purchase.id });
+  } else if(method === 'emola'){
+    return res.json({ ok:true, note: 'E-mola: criar requisicao via API da E-mola e retornar instruções (telefone/USSD ou link).', purchaseId: purchase.id });
+  } else {
+    return res.json({ ok:false, error:'Metodo desconhecido' });
+  }
+});
+
+// Upload payment proof (manual)
+app.post('/api/upload-proof/:purchaseId', requireAuth, upload.single('proof'), async (req,res) => {
+  const pid = req.params.purchaseId;
+  await db.read();
+  const purchase = db.data.purchases.find(p => p.id === pid && p.userId === req.user.id);
+  if(!purchase) return res.status(400).json({error:'Compra não encontrada'});
+  purchase.proof = req.file.filename;
+  purchase.status = 'submitted';
+  await db.write();
+  res.json({ ok:true });
+});
+
+// Dashboard data (calculates earned amount so far)
+app.get('/api/dashboard', requireAuth, async (req,res) => {
+  await db.read();
+  const user = db.data.users.find(u => u.id === req.user.id);
+  const purchases = db.data.purchases.filter(p => p.userId === user.id && (p.status === 'active' || p.status === 'submitted' || p.status === 'pending' || p.status==='approved'));
+  const now = new Date();
+  const details = purchases.map(p => {
+    const plan = p.planSnapshot;
+    const bought = p.boughtAt ? new Date(p.boughtAt) : new Date();
+    const elapsedDays = Math.floor((now - bought) / (1000*60*60*24));
+    const daysWorked = Math.min(Math.max(elapsedDays,0), plan.duration_days);
+    const initial = plan.usd;
+    const daily = plan.daily_percent / 100;
+    const earned = initial * ( Math.pow(1+daily, daysWorked) - 1 );
+    const total = initial + earned;
+    return { id: p.id, planName: plan.name, status: p.status, boughtAt: p.boughtAt, daysWorked, earned: Number(earned.toFixed(2)), total: Number(total.toFixed(2)), method: p.method };
+  });
+  res.json({ user: { name: user.name, email: user.email }, purchases: details });
+});
+
+// Admin: list submissions and approve
+app.get('/api/admin/purchases', async (req,res) => {
+  // NOTE: No admin auth here for demo; protect in production!
+  await db.read();
+  res.json(db.data.purchases);
+});
+
+app.post('/api/admin/approve/:purchaseId', async (req,res) => {
+  const pid = req.params.purchaseId;
+  await db.read();
+  const purchase = db.data.purchases.find(p => p.id === pid);
+  if(!purchase) return res.status(404).json({error:'Não encontrado'});
+  // If providerRef present and provider is online, we can apply directly, else approve manual proof
+  purchase.status = 'active';
+  purchase.boughtAt = new Date().toISOString();
+  await db.write();
+  res.json({ ok:true });
+});
+
+// PAYMENT WEBHOOKS (placeholders) - these endpoints must be registered in each provider's dashboard
+// M-PESA webhook example (Pretend): receive JSON from M-Pesa and confirm payment
+app.post('/webhook/m-pesa', async (req,res) => {
+  // Validate using M-Pesa signature (implementation depends on provider)
+  const data = req.body;
+  // Example: data.purchaseId might be included in metadata when initiating payment
+  // For demo, assume body contains { purchaseId, status, providerRef }
+  if(data && data.purchaseId && data.status === 'success'){
+    await applyPayment(data.purchaseId, 'm-pesa', data.providerRef || null);
+  }
+  res.sendStatus(200);
+});
+
+// PayPal webhooks
+app.post('/webhook/paypal', async (req,res) => {
+  const data = req.body;
+  // Validate webhook with PayPal (verify signature)
+  // Example payload expected: { purchaseId, status, providerRef }
+  if(data && data.purchaseId && (data.event_type === 'CHECKOUT.ORDER.APPROVED' || data.status === 'COMPLETED')){
+    await applyPayment(data.purchaseId, 'paypal', data.providerRef || data.id || null);
+  }
+  res.sendStatus(200);
+});
+
+// Binance webhook (or callback)
+app.post('/webhook/binance', async (req,res) => {
+  const data = req.body;
+  if(data && data.purchaseId && data.status === 'SUCCESS'){
+    await applyPayment(data.purchaseId, 'binance', data.providerRef || null);
+  }
+  res.sendStatus(200);
+});
+
+// E-mola webhook
+app.post('/webhook/emola', async (req,res) => {
+  const data = req.body;
+  if(data && data.purchaseId && data.status === 'paid'){
+    await applyPayment(data.purchaseId, 'emola', data.providerRef || null);
+  }
+  res.sendStatus(200);
+});
+
+app.get('/logout', (req,res) => {
+  res.clearCookie('auth');
+  res.redirect('/');
+});
+
+// Serve app pages
+app.get('/', (req,res) => res.sendFile(path.join(__dirname,'public','index.html')));
+app.get('/dashboard.html', (req,res) => res.sendFile(path.join(__dirname,'public','dashboard.html')));
+app.get('/admin.html', (req,res) => res.sendFile(path.join(__dirname,'public','admin.html')));
+
+app.listen(PORT, ()=> console.log(`Mining Imidio a correr na porta ${PORT}`)); This is a basic workflow to help you get started with Actions
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
