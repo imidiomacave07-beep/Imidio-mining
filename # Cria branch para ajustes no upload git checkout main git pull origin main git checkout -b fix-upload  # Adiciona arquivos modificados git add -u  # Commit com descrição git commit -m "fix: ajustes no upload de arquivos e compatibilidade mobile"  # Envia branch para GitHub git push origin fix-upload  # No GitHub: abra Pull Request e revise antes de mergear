@@ -1,0 +1,15 @@
+# Cria branch para ajustes no upload
+git checkout main
+git pull origin main
+git checkout -b fix-upload
+
+# Adiciona arquivos modificados
+git add -u
+
+# Commit com descrição
+git commit -m "fix: ajustes no upload de arquivos e compatibilidade mobile"
+
+# Envia branch para GitHub
+git push origin fix-upload
+
+# No GitHub: abra Pull Request e revise antes de mergear
