@@ -1,0 +1,15 @@
+# Cria branch para ajustes de pagamentos
+git checkout main
+git pull origin main
+git checkout -b fix-pagamentos
+
+# Adiciona arquivos rastreados
+git add -u
+
+# Commit das alterações
+git commit -m "fix: teste de pagamentos sandbox e notificações"
+
+# Envia branch para GitHub
+git push origin fix-pagamentos
+
+# No GitHub: abra Pull Request e merge na main
