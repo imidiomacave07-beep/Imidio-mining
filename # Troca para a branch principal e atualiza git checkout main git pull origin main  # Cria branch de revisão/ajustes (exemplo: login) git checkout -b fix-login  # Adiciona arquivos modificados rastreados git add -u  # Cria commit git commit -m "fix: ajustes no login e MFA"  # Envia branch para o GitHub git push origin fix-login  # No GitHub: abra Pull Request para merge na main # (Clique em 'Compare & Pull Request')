@@ -1,0 +1,18 @@
+# Troca para a branch principal e atualiza
+git checkout main
+git pull origin main
+
+# Cria branch de revisão/ajustes (exemplo: login)
+git checkout -b fix-login
+
+# Adiciona arquivos modificados rastreados
+git add -u
+
+# Cria commit
+git commit -m "fix: ajustes no login e MFA"
+
+# Envia branch para o GitHub
+git push origin fix-login
+
+# No GitHub: abra Pull Request para merge na main
+# (Clique em 'Compare & Pull Request')
