@@ -1,0 +1,7 @@
+Semana 1 – Revisão geral: Testar login, cadastro, uploads, MFA, corrigir bugs
+Semana 2 – Teste de pagamentos: Banco e criptomoedas (sandbox), notificações, corrigir problemas
+Semana 3 – Funcionalidades extras: Dashboard, relatórios, notificações, testes unitários
+Semana 4 – Preparação lançamento: Limpar branches, atualizar documentação, configurar link público
+Semana 5 – Teste piloto: Contas externas, simular fluxo usuários, ajustes UX/UI
+Semana 6 – Merge final e deploy: Revisar commits finais, merge na main, deploy produção
+Semana 7 – Pós-lançamento: Monitorar erros/logs, corrigir bugs menores, planejar próximas features
