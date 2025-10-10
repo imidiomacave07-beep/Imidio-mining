@@ -1,0 +1,13 @@
+git checkout -b "$BRANCH_NAME" || { echo "Erro ao criar branch $BRANCH_NAME"; return 1; }
+
+  git add -u
+
+  if git diff --cached --name-only | grep -q .; then
+    git commit -m "$COMMIT_TITLE" -m "$COMMIT_DESC" || { echo "Erro no commit em $BRANCH_NAME"; return 1; }
+    git push origin "$BRANCH_NAME" || { echo "Erro ao enviar branch $BRANCH_NAME"; return 1; }
+    echo "✅ OK: branch '$BRANCH_NAME' criada e enviada."
+  else
+    echo "⚠️ Nenhuma alteração rastreada para commitar em '$BRANCH_NAME'."
+    git push origin "$BRANCH_NAME" || echo "Aviso: não foi possível criar branch remota."
+  fi
+}
