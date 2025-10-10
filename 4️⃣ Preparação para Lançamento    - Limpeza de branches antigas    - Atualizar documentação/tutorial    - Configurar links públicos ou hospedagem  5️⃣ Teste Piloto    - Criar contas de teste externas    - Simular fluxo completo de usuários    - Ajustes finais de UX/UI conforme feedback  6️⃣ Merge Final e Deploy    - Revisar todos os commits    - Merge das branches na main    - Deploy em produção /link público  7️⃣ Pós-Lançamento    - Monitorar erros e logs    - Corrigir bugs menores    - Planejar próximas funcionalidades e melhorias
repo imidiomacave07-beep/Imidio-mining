@@ -1,0 +1,19 @@
+4️⃣ Preparação para Lançamento
+   - Limpeza de branches antigas
+   - Atualizar documentação/tutorial
+   - Configurar links públicos ou hospedagem
+
+5️⃣ Teste Piloto
+   - Criar contas de teste externas
+   - Simular fluxo completo de usuários
+   - Ajustes finais de UX/UI conforme feedback
+
+6️⃣ Merge Final e Deploy
+   - Revisar todos os commits
+   - Merge das branches na main
+   - Deploy em produção / link público
+
+7️⃣ Pós-Lançamento
+   - Monitorar erros e logs
+   - Corrigir bugs menores
+   - Planejar próximas funcionalidades e melhorias
