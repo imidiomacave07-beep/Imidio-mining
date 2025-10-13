@@ -1,0 +1,38 @@
+name: Node.js CI
+
+# Dispara o workflow quando fizer push ou pull request na branch main
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Passo 1: Pega o código do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Passo 2: Configura a versão do Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Passo 3: Instala as dependências
+      - name: Install dependencies
+        run: npm install
+
+      # Passo 4: Executa build (se houver)
+      - name: Build project
+        run: npm run build --if-present
+
+      # Passo 5: Roda o servidor
+      - name: Start server
+        run: node server.js
+        env:
+          PORT: 10000
+          NODE_ENV: production
