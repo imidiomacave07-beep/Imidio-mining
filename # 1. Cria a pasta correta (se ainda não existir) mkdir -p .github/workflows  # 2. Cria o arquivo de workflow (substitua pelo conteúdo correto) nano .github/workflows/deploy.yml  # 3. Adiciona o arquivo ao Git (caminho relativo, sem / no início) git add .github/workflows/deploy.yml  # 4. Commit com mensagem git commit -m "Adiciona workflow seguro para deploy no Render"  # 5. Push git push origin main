@@ -1,0 +1,14 @@
+# 1. Cria a pasta correta (se ainda não existir)
+mkdir -p .github/workflows
+
+# 2. Cria o arquivo de workflow (substitua pelo conteúdo correto)
+nano .github/workflows/deploy.yml
+
+# 3. Adiciona o arquivo ao Git (caminho relativo, sem / no início)
+git add .github/workflows/deploy.yml
+
+# 4. Commit com mensagem
+git commit -m "Adiciona workflow seguro para deploy no Render"
+
+# 5. Push
+git push origin main￼Enter
