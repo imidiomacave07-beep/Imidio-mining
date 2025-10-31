@@ -2,10 +2,10 @@ const express = require("express");
 const path = require("path");
 const app = express();
 
-// serve arquivos da pasta 'public'
+// Serve arquivos da pasta 'public'
 app.use(express.static(path.join(__dirname, "public")));
 
-// rota padrão → envia o index.html
+// Rota padrão → envia o index.html
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
