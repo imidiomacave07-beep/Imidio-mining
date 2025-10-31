@@ -1,7 +1,6 @@
 {
   "name": "imidio-mining-final",
   "version": "1.0.0",
-  "description": "Servidor básico para Imidio Mining",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
