@@ -3,15 +3,15 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Servir a pasta "public" como estática
+// Servir arquivos estáticos da pasta "public"
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Rota principal para carregar o index.html
+// Rota principal
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando na porta ${PORT}`);
+  console.log(`✅ Servidor rodando na porta ${PORT}`);
 });
