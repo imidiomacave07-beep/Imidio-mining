@@ -1,20 +1,11 @@
-// server.js
 const express = require('express');
-const path = require('path');
-
 const app = express();
+const PORT = 10000;
 
-// Servir arquivos estáticos da pasta 'public'
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve arquivos estáticos da pasta 'public'
+app.use(express.static('public'));
 
-// Rota para a página inicial
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// Porta do Render ou fallback para 10000
-const PORT = process.env.PORT || 10000;
-
+// Inicia o servidor
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
