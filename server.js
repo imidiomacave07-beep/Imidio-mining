@@ -1,15 +1,13 @@
 const express = require('express');
-const path = require('path');
-
 const app = express();
 const PORT = 10000;
 
-// Serve arquivos estáticos da pasta 'public'
-app.use(express.static(path.join(__dirname, 'public')));
+// Servir arquivos estáticos da pasta 'public'
+app.use(express.static('public'));
 
-// Rota padrão (quando acessar '/')
+// Definir rota raiz
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(__dirname + '/public/index.html');
 });
 
 app.listen(PORT, () => {
