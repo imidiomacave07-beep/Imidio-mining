@@ -1,17 +1,12 @@
 {
-  "name": "imidio-mining-final",
+  "name": "imidio-mining",
   "version": "1.0.0",
-  "description": "Plataforma de mineração Imidio Mining",
+  "description": "Plataforma de mineração Imidio",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.18.2"
-  },
-  "engines": {
-    "node": "22.x"
-  },
-  "author": "imidiomacave07",
-  "license": "MIT"
+  }
 }
