@@ -1,25 +1,21 @@
-// server.js
-const express = require('express');
-const path = require('path');
+// server.js — servidor principal da plataforma Imidio Mining
+
+const express = require("express");
+const path = require("path");
+
 const app = express();
 
-// Servir arquivos estáticos da pasta 'public'
-app.use(express.static(path.join(__dirname, 'public')));
+// Define a pasta "public" como pública (para servir HTML, CSS e JS)
+app.use(express.static(path.join(__dirname, "public")));
 
-// Rota principal ("/")
-app.get('/', (req, res) => {
-  // Log para debug no Render
-  console.log('Rota / acessada — servindo public/index.html');
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// Rota principal
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Health check simples (útil para plataformas que fazem probe)
-app.get('/healthz', (req, res) => {
-  res.status(200).send('ok');
-});
-
-// Porta dinâmica (Render define via process.env.PORT)
+// Define a porta (Render usa process.env.PORT automaticamente)
 const PORT = process.env.PORT || 10000;
+
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`🚀 Servidor Imidio Mining rodando na porta ${PORT}`);
 });
