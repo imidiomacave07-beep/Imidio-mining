@@ -1,17 +1,26 @@
 const express = require('express');
-const path = require('path');
 const app = express();
+const PORT = process.env.PORT || 10000;
 
-// Servir arquivos estáticos da pasta 'public'
-app.use(express.static(path.join(__dirname, 'public')));
+// Middleware para JSON (caso queira receber dados via POST)
+app.use(express.json());
 
-// Rota principal
+// Rota raiz
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.send('Servidor Imidio Mining funcionando! 🚀');
 });
 
-// Porta
-const PORT = process.env.PORT || 10000;
+// Rota de teste
+app.get('/status', (req, res) => {
+  res.json({ status: 'online', time: new Date() });
+});
+
+// Rota para qualquer URL não definida
+app.use((req, res) => {
+  res.status(404).send('Página não encontrada');
+});
+
+// Inicia o servidor
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
