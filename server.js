@@ -1,15 +1,19 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 
-// Porta que o Render define
+// Porta definida pelo Render
 const PORT = process.env.PORT || 3000;
 
-// Rota raiz
+// Diga ao Express onde estão os arquivos do front-end (HTML, CSS, JS)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Rota principal envia o index.html
 app.get('/', (req, res) => {
-  res.send('Olá, mundo! Seu app está rodando no Render 🚀');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Inicia o servidor
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
