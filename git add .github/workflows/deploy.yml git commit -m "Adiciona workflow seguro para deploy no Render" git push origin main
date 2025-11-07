@@ -1,3 +1,0 @@
-git add .github/workflows/deploy.yml
-git commit -m "Adiciona workflow seguro para deploy no Render"
-git push origin main
