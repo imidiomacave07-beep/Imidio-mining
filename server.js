@@ -2,19 +2,21 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-// Servir arquivos estáticos da pasta public
+// Servir arquivos estáticos da pasta "public"
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Página inicial (index.html)
+// Rota principal
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Página de teste para verificar se o servidor responde
+// Teste de rota adicional
 app.get('/teste', (req, res) => {
-  res.send('🚀 Servidor funcionando perfeitamente no Render!');
+  res.send('✅ A rota /teste está a funcionar corretamente!');
 });
 
-// Inicializa o servidor
+// Iniciar o servidor
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Servidor rodando na porta ${port}`));
+app.listen(port, () => {
+  console.log(`🚀 Servidor rodando na porta ${port}`);
+});
