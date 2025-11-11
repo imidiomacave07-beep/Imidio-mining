@@ -1,16 +1,12 @@
 {
   "name": "imidio-mining-final",
   "version": "1.0.0",
-  "description": "Servidor Imidio Mining - plataforma de mineração simulada",
+  "description": "Plataforma de mineração Imidio Mining",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.18.2"
-  },
-  "engines": {
-    "node": "20.x",
-    "npm": "10.x"
   }
 }
