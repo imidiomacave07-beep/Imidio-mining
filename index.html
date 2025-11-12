@@ -4,156 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Imidio Mining</title>
-  <style>
-    /* Reset básico */
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-
-    body { background-color: #f5f6fa; color: #333; }
-
-    /* Header */
-    header {
-      background: #1e272e;
-      color: #fff;
-      padding: 20px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    header h1 { font-size: 1.8rem; }
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      margin-left: 20px;
-      font-weight: bold;
-    }
-    nav a:hover { text-decoration: underline; }
-
-    /* Hero Section */
-    .hero {
-      text-align: center;
-      padding: 80px 20px;
-      background: linear-gradient(to right, #00a8ff, #9c88ff);
-      color: #fff;
-    }
-    .hero h2 { font-size: 2.5rem; margin-bottom: 20px; }
-    .hero p { font-size: 1.2rem; margin-bottom: 30px; }
-    .hero button {
-      padding: 15px 30px;
-      font-size: 1rem;
-      border: none;
-      background-color: #ff9f43;
-      color: #fff;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: background 0.3s;
-    }
-    .hero button:hover { background-color: #ff6b6b; }
-
-    /* Planos */
-    .plans {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 20px;
-      padding: 60px 20px;
-    }
-    .plan {
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-      width: 300px;
-      text-align: center;
-      transition: transform 0.3s;
-    }
-    .plan:hover { transform: translateY(-5px); }
-    .plan h3 { font-size: 1.5rem; margin-bottom: 15px; }
-    .plan p { font-size: 1rem; margin-bottom: 20px; }
-    .plan span { font-size: 1.5rem; font-weight: bold; color: #00a8ff; }
-    .plan button {
-      padding: 10px 20px;
-      border: none;
-      background-color: #00a8ff;
-      color: #fff;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .plan button:hover { background-color: #0097e6; }
-
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 30px 20px;
-      background-color: #1e272e;
-      color: #fff;
-      margin-top: 40px;
-    }
-    footer p { font-size: 0.9rem; }
-
-    /* Responsivo */
-    @media (max-width: 768px) {
-      .plans { flex-direction: column; align-items: center; }
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <!-- Header -->
   <header>
-    <h1>Imidio Mining</h1>
-    <nav>
-      <a href="#plans">Planos</a>
-      <a href="#contact">Contato</a>
-    </nav>
+    <h1>🚀 Imidio Mining</h1>
+    <p>Plataforma online hospedada com sucesso no Render!</p>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <h2>Mineração de Criptomoedas Profissional</h2>
-    <p>Ganhe lucros diários com segurança e facilidade. Escolha seu plano e comece agora!</p>
-    <button onclick="scrollToPlans()">Ver Planos</button>
-  </section>
+  <main>
+    <section id="dashboard">
+      <h2>Bem-vindo à sua plataforma de mineração</h2>
+      <p>Comece a gerar seus rendimentos de forma automática e segura.</p>
+      <button id="startBtn">Iniciar Mineração</button>
+      <p id="statusMsg"></p>
+    </section>
+  </main>
 
-  <!-- Planos -->
-  <section class="plans" id="plans">
-    <div class="plan">
-      <h3>Plano Iniciante</h3>
-      <p>Ideal para quem quer começar devagar.</p>
-      <span>$10/mês</span>
-      <br><br>
-      <button>Assinar</button>
-    </div>
-    <div class="plan">
-      <h3>Plano Intermediário</h3>
-      <p>Para mineradores que buscam melhores lucros.</p>
-      <span>$50/mês</span>
-      <br><br>
-      <button>Assinar</button>
-    </div>
-    <div class="plan">
-      <h3>Plano Avançado</h3>
-      <p>Para quem quer maximizar ganhos e performance.</p>
-      <span>$100/mês</span>
-      <br><br>
-      <button>Assinar</button>
-    </div>
-  </section>
-
-  <!-- Contato -->
-  <section id="contact" style="padding: 60px 20px; text-align:center;">
-    <h2>Contato</h2>
-    <p>Envie suas dúvidas ou sugestões para <a href="mailto:contato@imidiomining.com">contato@imidiomining.com</a></p>
-  </section>
-
-  <!-- Footer -->
   <footer>
     <p>© 2025 Imidio Mining. Todos os direitos reservados.</p>
   </footer>
 
-  <script>
-    function scrollToPlans() {
-      document.getElementById('plans').scrollIntoView({ behavior: 'smooth' });
-    }
-  </script>
+  <script src="js/main.js"></script>
 </body>
 </html>
