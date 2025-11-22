@@ -1,0 +1,19 @@
+# TO DO – Pendentes
+[ ] Testes de login e cadastro
+[ ] Testes de upload de arquivos
+[ ] Testes de pagamentos (sandbox)
+[ ] Verificação de MFA e permissões
+[ ] Ajustes de UX/UI
+[ ] Atualização de documentação/tutorial
+[ ] Configuração de link público / deploy
+[ ] Monitoramento inicial pós-lançamento
+
+# IN PROGRESS – Em andamento
+[ ] Merge de branches de ajustes
+[ ] Revisão de Pull Requests
+
+# DONE – Concluído
+[x] Criar checklist pré-lançamento
+[x] Organização de branches
+[x] Revisão geral do código
+[x] Planejamento do cronograma de lançamento
